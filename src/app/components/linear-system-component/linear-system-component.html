@@ -1,0 +1,39 @@
+<p-card>
+  <label>Количество уравнений: </label>
+  <p-inputNumber [(ngModel)]="equations" [min]="1" [max]="10" (onInput)="updateSystemAsync()"></p-inputNumber>
+  <p></p>
+  <label>Количество переменных: </label>
+  <p-inputNumber [(ngModel)]="variables" [min]="1" [max]="10" (onInput)="updateSystemAsync()"></p-inputNumber>
+
+  <h3>Система линейных уравнений</h3>
+
+  <p-table [value]="coefficients()">
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let varLabel of getVariableLabels()">{{ varLabel }}</th>
+        <th>= b</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-i="rowIndex">
+      <tr>
+        <td *ngFor="let _ of getVariableLabels(); let j = index">
+          <p-inputNumber
+            [(ngModel)]="coefficients()[i][j]"
+            [minFractionDigits]="0"
+            [maxFractionDigits]="3"
+            style="max-width: 20px">
+          </p-inputNumber>
+        </td>
+        <td>
+          <p-inputNumber
+            [(ngModel)]="constants()[i]"
+            [minFractionDigits]="0"
+            [maxFractionDigits]="3"
+            style="max-width: 20px">
+          </p-inputNumber>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
