@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
-import {SymplexComponent} from './pages/symplex-component/symplex-component';
+import {SymplexPage} from './pages/symplex-page/symplex-page.component';
+import {TransportPage} from './pages/transport-page/transport-page';
 
 export const routes: Routes = [
-  { path: 'symplex', component: SymplexComponent },
+  { path: 'symplex', component: SymplexPage },
+  { path: 'transport', component: TransportPage },
 ];

@@ -14,15 +14,15 @@ import { MenuItem } from 'primeng/api';
 export class AppComponent {
   items: MenuItem[] = [
     {
-      label: 'Симплекс-метод',
+      label: '<h1>Симплекс-метод</h1>',
       routerLink: '/symplex',
     },
    {
-      label: 'Транспортная задача',
-      routerLink: '/'
+      label: '<h1>Транспортная задача</h1>',
+      routerLink: '/transport'
     },
     {
-      label: 'Графы',
+      label: '<h1>Графы</h1>',
       routerLink: '/'
     },
   ];

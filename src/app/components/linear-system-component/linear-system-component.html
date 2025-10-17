@@ -1,17 +1,16 @@
 <p-card>
-  <label>Количество уравнений: </label>
-  <p-inputNumber [(ngModel)]="equations" [min]="1" [max]="10" (onInput)="updateSystemAsync()"></p-inputNumber>
-  <p></p>
-  <label>Количество переменных: </label>
-  <p-inputNumber [(ngModel)]="variables" [min]="1" [max]="10" (onInput)="updateSystemAsync()"></p-inputNumber>
-
-  <h3>Система линейных уравнений</h3>
-
-  <p-table [value]="coefficients()">
+  <div class="input-group">
+    <label>Количество уравнений: </label>
+    <p-inputNumber [(ngModel)]="equations" [min]="1" [max]="10" (onInput)="updateSystemAsync()"></p-inputNumber>
+    <label>Количество переменных: </label>
+    <p-inputNumber [(ngModel)]="variables" [min]="1" [max]="10" (onInput)="updateSystemAsync()"></p-inputNumber>
+  </div>
+  <p-table [value]="coefficients()" [tableStyle]="{ 'width': '100%', 'table-layout': 'fixed' }">
     <ng-template pTemplate="header">
       <tr>
         <th *ngFor="let varLabel of getVariableLabels()">{{ varLabel }}</th>
-        <th>= b</th>
+        <th>Ограничение</th>
+        <th>b</th>
       </tr>
     </ng-template>
 
@@ -22,18 +21,38 @@
             [(ngModel)]="coefficients()[i][j]"
             [minFractionDigits]="0"
             [maxFractionDigits]="3"
-            style="max-width: 20px">
+            style="width: 100%; box-sizing: border-box;">
           </p-inputNumber>
+        </td>
+        <td>
+          <p-select
+            [(ngModel)]="constraints()[i]"
+            [options]="constraintOptions"
+            appendTo="body"
+            style="width: 100%; box-sizing: border-box;">
+          </p-select>
         </td>
         <td>
           <p-inputNumber
             [(ngModel)]="constants()[i]"
             [minFractionDigits]="0"
             [maxFractionDigits]="3"
-            style="max-width: 20px">
+            style="width: 100%; box-sizing: border-box;">
           </p-inputNumber>
         </td>
       </tr>
     </ng-template>
   </p-table>
+
+  <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem;">
+    <p-select
+      [(ngModel)]="selectedMethod"
+      [options]="methodOptions"
+      placeholder="Выберите метод"
+      style="width: 250px;"
+      appendTo="body">
+    </p-select>
+
+    <p-button (click)="onSubmit()" >Решить</p-button>
+  </div>
 </p-card>

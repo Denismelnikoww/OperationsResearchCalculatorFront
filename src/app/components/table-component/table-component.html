@@ -1,16 +1,24 @@
 <p-card>
-  <p-table [value]="rows" showGridlines="true">
+  <p-table [value]="data" [tableStyle]="{ width: '100%' }">
     <ng-template pTemplate="header">
       <tr>
-        <th></th>
-        <th *ngFor="let col of columns">{{ col }}</th>
+        <th></th> <!-- для rowNames -->
+        <th *ngFor="let col of columns; let colIndex = index"
+            [ngClass]="{ 'highlighted-col': highlightedColumn === colIndex }">
+          {{ col }}
+        </th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-rowData>
-      <tr>
-        <td>{{ rowData }}</td>
-        <td *ngFor="let col of columns">
-          {{ getCellData(rowData, col) }}
+
+    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+      <tr [ngClass]="{ 'highlighted-row': highlightedRow === rowIndex }">
+        <td>{{ rowNames[rowIndex] || rowIndex + 1 }}</td> <!-- отображаем имя строки -->
+        <td *ngFor="let cell of rowData; let colIndex = index"
+            [ngClass]="{
+              'highlighted-cell': highlightedCell?.row === rowIndex && highlightedCell?.col === colIndex,
+              'highlighted-col': highlightedColumn === colIndex
+            }">
+          {{ cell }}
         </td>
       </tr>
     </ng-template>

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SymplexComponent } from './symplex-component';
+import { TransportPage } from './transport-page';
 
-describe('SymplexComponent', () => {
-  let component: SymplexComponent;
-  let fixture: ComponentFixture<SymplexComponent>;
+describe('TransportPage', () => {
+  let component: TransportPage;
+  let fixture: ComponentFixture<TransportPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SymplexComponent]
+      imports: [TransportPage]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SymplexComponent);
+    fixture = TestBed.createComponent(TransportPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

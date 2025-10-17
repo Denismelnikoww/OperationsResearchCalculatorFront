@@ -1,0 +1,30 @@
+:host ::ng-deep .p-datatable-wrapper {
+  overflow-x: hidden;
+}
+
+.p-datatable table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.p-datatable th,
+.p-datatable td {
+  padding: 0.25rem;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.p-datatable .p-inputnumber {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}

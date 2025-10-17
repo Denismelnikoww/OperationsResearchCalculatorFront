@@ -1,0 +1,11 @@
+<app-linear-system (onSubmitForm)="onSubmitForm($event)"></app-linear-system>
+
+@for(table of tables; track table) {
+  <app-table-component
+    [data]="table.data"
+    [columns]="table.columns"
+    [rowNames]="table.rowNames"
+    [highlightedRow]="table.highlightedRow"
+    [highlightedColumn]="table.highlightedColumn">
+  </app-table-component>
+}

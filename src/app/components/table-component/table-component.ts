@@ -1,24 +1,22 @@
-import { Component } from '@angular/core';
-import {TableModule} from 'primeng/table';
-import {NgForOf} from '@angular/common';
-import {Card} from 'primeng/card';
+import { Component, Input } from '@angular/core';
+import { TableModule } from 'primeng/table';
+import { NgClass, NgForOf } from '@angular/common';
+import { Card } from 'primeng/card';
+
+export type TableData = number[][];
 
 @Component({
   selector: 'app-table-component',
-  imports: [
-    TableModule,
-    NgForOf,
-    Card,
-  ],
+  standalone: true,
+  imports: [TableModule, NgClass, NgForOf, Card],
   templateUrl: './table-component.html',
-  styleUrl: './table-component.css'
+  styleUrls: ['./table-component.css']
 })
 export class TableComponent {
-  // Данные для таблицы
-  rows = ['Row1', 'Row2', 'Row3', 'Row4'];
-  columns = ['Column1', 'Column2','Column4','Column4'];
-
-  getCellData(row: string, col: string): string {
-    return `${row}-${col}`;
-  }
+  @Input() data: TableData = [];
+  @Input() columns: string[] = [];
+  @Input() rowNames: string[] = [];
+  @Input() highlightedRow?: number;
+  @Input() highlightedColumn?: number;
+  @Input() highlightedCell?: { row: number; col: number };
 }

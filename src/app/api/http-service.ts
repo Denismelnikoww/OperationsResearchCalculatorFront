@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HttpService {
-  private readonly baseUrl = 'http://localhost:4200'; // твой базовый URL
+  private readonly baseUrl = 'http://localhost:4200'; 
 
   constructor(private http: HttpClient) {}
 
