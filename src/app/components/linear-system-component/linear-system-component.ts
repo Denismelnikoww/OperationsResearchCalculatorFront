@@ -39,9 +39,9 @@ export class LinearSystemComponent {
   public selectedMethod = 3;
 
   methodOptions = [
-    { label: 'Прямой симплекс-метод', value: 1 },
-    { label: 'Одновременное решение прямой и двойственной задачи', value: 2 },
-    { label: 'Двойственный симплекс', value: 3 }
+    { label: 'Прямой симплекс-метод', value: 'Прямой симплекс-метод' },
+    { label: 'Одновременное решение прямой и двойственной задачи', value: 'Прямой симплекс-метод' },
+    { label: 'Двойственный симплекс', value: 'Прямой симплекс-метод' }
   ];
   constraintOptions = [
     { label: '>', value: '>' },
@@ -97,6 +97,6 @@ export class LinearSystemComponent {
 
   onSubmit(): void {
     const formData = this.convertToForm();
-    this.onSubmitForm.emit(formData); // Отправляем данные родителю
+    this.onSubmitForm.emit(formData);
   }
 }

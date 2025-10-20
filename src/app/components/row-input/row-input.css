@@ -1,0 +1,27 @@
+/* linear-row-component.css */
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Отступ между элементами */
+  margin-bottom: 1rem; /* Отступ снизу до контейнера строки */
+  flex-wrap: wrap; /* Позволяет переносить элементы при нехватке ширины */
+}
+
+/* Контейнер для строки элементов ввода */
+.row-input-container {
+  display: flex;
+  flex-wrap: wrap; /* ВАЖНО: позволяет элементам переноситься */
+  gap: 0.25rem; /* Отступ между элементами */
+  justify-content: flex-start; /* Выравнивание по левому краю */
+  align-items: center; /* Выравнивание по вертикали */
+  padding: 0.5rem;
+  min-height: 50px; /* Минимальная высота для визуальной стабильности */
+}
+
+
+/* Стили для PrimeNG InputNumber внутри строки */
+.row-input-container p-inputNumber {
+  /* min-width уже задан в HTML */
+  /* margin уже задан в HTML */
+  flex: 0 0 auto; /* Элемент не растягивается и не сжимается, занимает только нужное место */
+}

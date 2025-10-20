@@ -1,0 +1,17 @@
+<p-card>
+  <app-row-input text = "Количество поставщиков"></app-row-input>
+  <p style="height: 1rem"></p>
+  <app-row-input text = "Количество покупателей"></app-row-input>
+
+  <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem;">
+    <p-select
+      [(ngModel)]="selectedFillMethod"
+      [options]="fillMethodOptions"
+      placeholder="Выберите метод"
+      style="width: 250px;"
+      appendTo="body">
+    </p-select>
+
+    <p-button >Решить</p-button>
+  </div>
+</p-card>
