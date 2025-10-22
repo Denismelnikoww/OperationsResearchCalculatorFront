@@ -7,7 +7,7 @@
     <!-- Передаем начальное количество, если нужно -->
   </app-row-input>
 
-  <p style="height: 10px"></p>
+  <!-- <p style="height: 10px"></p> -->
 
   <app-row-input 
     #buyersInput
@@ -28,4 +28,9 @@
 
     <p-button (click)="onSolve()">Решить</p-button>
   </div>
+<app-table-input
+  #tableInput
+  [rows]="suppliersInput.variables() + 1"
+  [cols]="buyersInput.variables() + 1">
+</app-table-input>
 </p-card>
