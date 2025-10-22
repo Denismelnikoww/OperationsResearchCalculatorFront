@@ -7,6 +7,9 @@ import { SelectModule } from 'primeng/select';
 import { NgForOf } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { Button } from 'primeng/button';
+import { LinearRowComponent } from "../row-input/row-input";
+import { label } from '@primeuix/themes/aura/metergroup';
+import { value } from '@primeuix/themes/aura/knob';
 
 export interface LinearSystemForm {
   coefficients: number[][];
@@ -26,7 +29,8 @@ export interface LinearSystemForm {
     NgForOf,
     CardModule,
     Button,
-  ],
+    LinearRowComponent
+],
   templateUrl: './linear-system-component.html',
   styleUrls: ['./linear-system-component.css']
 })
@@ -36,12 +40,17 @@ export class LinearSystemComponent {
   public coefficients = signal<number[][]>(this.createMatrix(2, 2));
   public constants = signal<number[]>(Array(2).fill(0));
   public constraints = signal<string[]>(Array(2).fill('='));
+  public max  = signal<string>("→ max")
   public selectedMethod = 3;
 
+  maxOptions = [
+    {label: '→ max', value: 'max'},
+    {label: '→ min', value: 'min'}
+  ]
   methodOptions = [
-    { label: 'Прямой симплекс-метод', value: 'Прямой симплекс-метод' },
-    { label: 'Одновременное решение прямой и двойственной задачи', value: 'Прямой симплекс-метод' },
-    { label: 'Двойственный симплекс', value: 'Прямой симплекс-метод' }
+    { label: 'Прямой симплекс-метод', value: "1" },
+    { label: 'Одновременное решение прямой и двойственной задачи', value: "2" },
+    { label: 'Двойственный симплекс', value: '3' }
   ];
   constraintOptions = [
     { label: '>', value: '>' },

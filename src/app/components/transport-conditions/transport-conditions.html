@@ -1,17 +1,31 @@
 <p-card>
-  <app-row-input text = "Количество поставщиков"></app-row-input>
-  <p style="height: 1rem"></p>
-  <app-row-input text = "Количество покупателей"></app-row-input>
+  <!-- Добавляем #ref к компонентам, чтобы получить к ним доступ -->
+  <app-row-input 
+    #suppliersInput
+    [label]="'Количество поставщиков'" 
+    [initialVariables]="initialSuppliersCount"> <!-- Используем новое имя @Input -->
+    <!-- Передаем начальное количество, если нужно -->
+  </app-row-input>
+
+  <p style="height: 10px"></p>
+
+  <app-row-input 
+    #buyersInput
+    [label]="'Количество покупателей'" 
+    [initialVariables]="initialBuyersCount"> <!-- Используем новое имя @Input -->
+  </app-row-input>
 
   <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem;">
     <p-select
       [(ngModel)]="selectedFillMethod"
       [options]="fillMethodOptions"
+      optionLabel="label"
+      optionValue="value"
       placeholder="Выберите метод"
       style="width: 250px;"
       appendTo="body">
     </p-select>
 
-    <p-button >Решить</p-button>
+    <p-button (click)="onSolve()">Решить</p-button>
   </div>
 </p-card>

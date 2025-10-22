@@ -1,8 +1,14 @@
-
-  <div class="input-group">
-    <label>{{ text }} </label>
-    <p-inputNumber [(ngModel)]="variables" [min]="1" [max]="20" (onInput)="updateRowAsync()"></p-inputNumber>
+<!-- row-input.html -->
+<div class="input-group">
+    <label>{{ label }}: </label>
+    <p-inputNumber 
+      [(ngModel)]="variables" 
+      [min]="1" 
+      [max]="20" 
+      (onInput)="updateRowAsync()">
+    </p-inputNumber>
   </div>
+
   <div class="row-input-container">
     <p-inputNumber
       *ngFor="let _ of getVariableLabels(); let i = index"
@@ -12,5 +18,3 @@
       inputId="row-element-{{i}}"
     ></p-inputNumber>
   </div>
-
-

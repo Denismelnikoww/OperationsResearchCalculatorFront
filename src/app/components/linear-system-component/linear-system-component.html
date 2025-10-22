@@ -1,4 +1,16 @@
+<!-- linear-system-component.html -->
 <p-card>
+   <!-- <app-row-input 
+    #buyersInput
+    [label]="'Количество покупателей'" 
+    [initialVariables]="2"> 
+  </app-row-input> -->
+  <p-select 
+            [(ngModel)]="max"
+            [options]="maxOptions"
+            appendTo="body"
+            style="width: 150px; box-sizing: border-box;">
+          </p-select>
   <div class="input-group">
     <label>Количество уравнений: </label>
     <p-inputNumber [(ngModel)]="equations" [min]="1" [max]="10" (onInput)="updateSystemAsync()"></p-inputNumber>
