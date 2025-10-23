@@ -73,15 +73,4 @@ export class LinearRowComponent {
     // Используем публичный сигнал variables для получения длины меток
     return Array(this.variables()).fill(0).map((_, i) => `e${i + 1}`);
   }
-
-  convertToForm(): RowInput {
-    return {
-      row: this.row()
-    };
-  }
-
-  onSubmit(): void {
-    const formData = this.convertToForm();
-    this.onSubmitForm.emit(formData);
-  }
 }

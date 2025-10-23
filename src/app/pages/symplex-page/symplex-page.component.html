@@ -2,10 +2,10 @@
 
 @for(table of tables; track table) {
   <app-table-component
-    [data]="table.data"
-    [columns]="table.columns"
+    [data]="table.table"
+    [columns]="table.columnsNames"
     [rowNames]="table.rowNames"
-    [highlightedRow]="table.highlightedRow"
-    [highlightedColumn]="table.highlightedColumn">
+    [highlightedRow]="table.pivotRow"
+    [highlightedColumn]="table.pivotColumn">
   </app-table-component>
 }

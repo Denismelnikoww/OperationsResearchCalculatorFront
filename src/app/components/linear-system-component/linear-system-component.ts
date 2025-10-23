@@ -1,5 +1,5 @@
 // linear-system-component.ts
-import { Component, signal, Output, EventEmitter } from '@angular/core';
+import {Component, signal, Output, EventEmitter, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -15,7 +15,9 @@ export interface LinearSystemForm {
   coefficients: number[][];
   constants: number[];
   constraints: string[];
-  selectedMethod: number;
+  selectedMethod: string;
+  max: boolean;
+  variables: number[];
 }
 
 @Component({
@@ -40,23 +42,26 @@ export class LinearSystemComponent {
   public coefficients = signal<number[][]>(this.createMatrix(2, 2));
   public constants = signal<number[]>(Array(2).fill(0));
   public constraints = signal<string[]>(Array(2).fill('='));
-  public max  = signal<string>("→ max")
-  public selectedMethod = 3;
+  public max = "→ max"
+  public selectedMethod = "Прямой";
 
   maxOptions = [
     {label: '→ max', value: 'max'},
     {label: '→ min', value: 'min'}
   ]
   methodOptions = [
-    { label: 'Прямой симплекс-метод', value: "1" },
-    { label: 'Одновременное решение прямой и двойственной задачи', value: "2" },
-    { label: 'Двойственный симплекс', value: '3' }
+    { label: 'Прямой симплекс-метод', value: "Прямой" },
+    { label: 'Одновременное решение прямой и двойственной задачи', value: "Одновременное" },
+    { label: 'Двойственный симплекс', value: 'Двойственный' }
   ];
   constraintOptions = [
     { label: '>', value: '>' },
     { label: '<', value: '<' },
     { label: '=', value: '=' }
   ];
+
+  @ViewChild('input', { static: true }) linearRowComponent!: LinearRowComponent;
+  initialCount = 2;
 
   @Output() onSubmitForm = new EventEmitter<LinearSystemForm>();
 
@@ -100,7 +105,9 @@ export class LinearSystemComponent {
       coefficients: this.coefficients(),
       constants: this.constants(),
       constraints: this.constraints(),
-      selectedMethod: this.selectedMethod
+      selectedMethod: this.selectedMethod,
+      max:  this.max == "max",
+      variables: this.linearRowComponent.row()
     };
   }
 

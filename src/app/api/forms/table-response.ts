@@ -1,7 +1,7 @@
 interface TableResponse {
-  data: any[][];
-  columns: string[];
+  table: any[][];
+  columnsNames: string[];
   rowNames: string[];
-  highlightedRow: number;
-  highlightedColumn: number;
+  pivotRow: number;
+  pivotColumn: number;
 }
