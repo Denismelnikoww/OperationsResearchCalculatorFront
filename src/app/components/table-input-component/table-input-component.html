@@ -1,3 +1,28 @@
-<p-table>
-    
+<p-table [value]="tableData" [scrollable]="true" scrollHeight="auto"
+         [tableStyle]="{ 'width': '100%', 'max-width': '100%' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th></th>
+      <th *ngFor="let colHeader of displayedColHeaders" class="text-center">
+        {{ colHeader }}
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+    <tr>
+      <td class="text-center font-bold">
+        {{ displayedRowHeaders[rowIndex] }}
+      </td>
+      <td *ngFor="let cellValue of rowData; let colIndex = index" class="p-2 text-center">
+        <p-inputNumber
+          [ngModel]="tableData[rowIndex][colIndex]"
+          (ngModelChange)="onCellValueChange(rowIndex, colIndex, $event)"
+          [showButtons]="false"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="6"
+          style="width: 100%; max-width: 8rem;"
+        ></p-inputNumber>
+      </td>
+    </tr>
+  </ng-template>
 </p-table>

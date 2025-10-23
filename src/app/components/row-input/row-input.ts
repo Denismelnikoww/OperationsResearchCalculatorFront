@@ -34,6 +34,7 @@ export class LinearRowComponent {
   public row = signal<number[]>(this.createRow(this._variables()));
 
   @Output() onSubmitForm = new EventEmitter<RowInput>();
+  @Output() rowChange = new EventEmitter<number[]>(); // Добавляем Output
 
   // При получении initialVariables обновляем как _variables, так и публичный variables
   @Input() set initialVariables(value: number) {
@@ -46,9 +47,6 @@ export class LinearRowComponent {
   }
 
   updateRowAsync(): void {
-    // setTimeout не всегда необходим, но может помочь избежать проблем с ExpressionChangedAfterItHasBeenCheckedError
-    // если обновление происходит в том же цикле, что и отрисовка
-    // Однако, если ngModel работает корректно, его можно и убрать
     setTimeout(() => {
       this.updateRow();
     }, 1);
@@ -64,6 +62,7 @@ export class LinearRowComponent {
     } else if (currentRow.length > vars) {
       this.row.set(currentRow.slice(0, vars));
     }
+    this.rowChange.emit(this.row()); // 🔥 Эмитим изменённую строку
   }
 
   private createRow(length: number): number[] {

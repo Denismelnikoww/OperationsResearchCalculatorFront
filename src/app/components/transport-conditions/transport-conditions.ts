@@ -1,30 +1,33 @@
-import { Component, Output, EventEmitter, ViewChild } from '@angular/core'; // Добавлен ViewChild
-import { Button } from 'primeng/button';
-import { Card } from 'primeng/card';
-import { LinearRowComponent, RowInput } from '../row-input/row-input'; // Убедитесь, что RowInput интерфейс экспортирован
-import { Select } from 'primeng/select';
+import { Component, Output, EventEmitter, ViewChild, signal, effect } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
+import { LinearRowComponent, RowInput } from '../row-input/row-input';
+import { TableInputComponent, TableData } from '../table-input-component/table-input-component';
 
 interface MethodOption {
   label: string;
   value: string;
 }
 
-// Интерфейс для данных транспортной задачи
 export interface TransportProblemData {
   suppliers: number[];
   buyers: number[];
+  costs: number[][];
   method: string;
 }
 
 @Component({
   selector: 'app-transport-conditions',
+  standalone: true,
   imports: [
-    Button,
-    Card,
-    LinearRowComponent, // Убедитесь, что LinearRowComponent правильно экспортирован
-    Select,
-    FormsModule
+    ButtonModule,
+    CardModule,
+    LinearRowComponent,
+    SelectModule,
+    FormsModule,
+    TableInputComponent
   ],
   templateUrl: './transport-conditions.html',
   styleUrl: './transport-conditions.css'
@@ -32,61 +35,81 @@ export interface TransportProblemData {
 export class TransportConditions {
   @Output() onSolveForm = new EventEmitter<TransportProblemData>();
 
-  public selectedFillMethod: string = "";
-  public fillMethodOptions: MethodOption[] = [
+  selectedFillMethod: string = "";
+  fillMethodOptions: MethodOption[] = [
     { label: "Метод северо-западного угла", value: "northwest" },
     { label: "Метод минимизации", value: "minimization" }
   ];
 
-  // Добавляем ViewChild для доступа к дочерним компонентам
   @ViewChild('suppliersInput', { static: true }) suppliersInputComponent!: LinearRowComponent;
   @ViewChild('buyersInput', { static: true }) buyersInputComponent!: LinearRowComponent;
 
-  // Опционально: задайте начальные значения
   initialSuppliersCount = 5;
   initialBuyersCount = 5;
 
-  // Метод, вызываемый при нажатии кнопки "Решить"
+  suppliersCount = signal<number>(this.initialSuppliersCount);
+  buyersCount = signal<number>(this.initialBuyersCount);
+  suppliersHeaders = signal<string[]>([]);
+  buyersHeaders = signal<string[]>([]);
+  costMatrix = signal<TableData>([]);
+
+  constructor() {
+    // Отслеживаем изменения в строке поставщиков
+    effect(() => {
+      const suppliersRow = this.suppliersInputComponent.row();
+      this.suppliersCount.set(suppliersRow.length);
+      this.suppliersHeaders.set(suppliersRow.map((_, i) => `Поставщик ${i + 1}`));
+    });
+
+    // Отслеживаем изменения в строке покупателей
+    effect(() => {
+      const buyersRow = this.buyersInputComponent.row();
+      this.buyersCount.set(buyersRow.length);
+      this.buyersHeaders.set(buyersRow.map((_, j) => `Покупатель ${j + 1}`));
+    });
+  }
+
+  onCostMatrixChange(data: TableData) {
+    this.costMatrix.set(data);
+  }
+
   onSolve(): void {
-    // Проверка, что компоненты существуют
     if (!this.suppliersInputComponent || !this.buyersInputComponent) {
       console.error('Дочерние компоненты не найдены');
       return;
     }
 
-    // Получаем текущие значения строк из дочерних компонентов
-    const suppliersRow = this.suppliersInputComponent.row(); // Используем сигнал
-    const buyersRow = this.buyersInputComponent.row();       // Используем сигнал
+    const suppliersRow = this.suppliersInputComponent.row();
+    const buyersRow = this.buyersInputComponent.row();
 
-    console.log('Текущая строка поставщиков:', suppliersRow); // Для отладки
-    console.log('Текущая строка покупателей:', buyersRow);   // Для отладки
-
-    // Проверка, что обе строки заполнены (по желанию)
     if (suppliersRow.length === 0) {
       console.warn('Строка поставщиков пуста');
-      return; // Можно показать уведомление пользователю
+      return;
     }
     if (buyersRow.length === 0) {
       console.warn('Строка покупателей пуста');
-      return; // Можно показать уведомление пользователю
+      return;
     }
-
-    // Проверка, что метод выбран
     if (!this.selectedFillMethod) {
       console.warn('Метод не выбран');
-      return; // Можно показать уведомление пользователю
+      return;
     }
 
-    // Собираем все данные в один объект
+    const currentMatrix = this.costMatrix();
+
+    if (currentMatrix.length !== suppliersRow.length || currentMatrix.some(row => row.length !== buyersRow.length)) {
+      console.warn('Матрица стоимостей не соответствует размерам поставщиков и покупателей');
+      return;
+    }
+
     const formData: TransportProblemData = {
       suppliers: suppliersRow,
       buyers: buyersRow,
+      costs: currentMatrix,
       method: this.selectedFillMethod
     };
 
-    // Отправляем данные родительскому компоненту или куда-то еще
     this.onSolveForm.emit(formData);
-
-    console.log('Отправляемые данные:', formData); // Для отладки
+    console.log('Отправляемые данные:', formData);
   }
 }

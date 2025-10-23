@@ -1,19 +1,23 @@
 <p-card>
-  <!-- Добавляем #ref к компонентам, чтобы получить к ним доступ -->
-  <app-row-input 
+  <app-row-input
     #suppliersInput
-    [label]="'Количество поставщиков'" 
-    [initialVariables]="initialSuppliersCount"> <!-- Используем новое имя @Input -->
-    <!-- Передаем начальное количество, если нужно -->
+    [label]="'Количество поставщиков'"
+    [initialVariables]="initialSuppliersCount"> <!-- Подписываемся на изменения -->
   </app-row-input>
 
-  <!-- <p style="height: 10px"></p> -->
-
-  <app-row-input 
+  <app-row-input
     #buyersInput
-    [label]="'Количество покупателей'" 
-    [initialVariables]="initialBuyersCount"> <!-- Используем новое имя @Input -->
+    [label]="'Количество покупателей'"
+    [initialVariables]="initialBuyersCount"> <!-- Подписываемся на изменения -->
   </app-row-input>
+
+  <app-table-input
+    [rows]="suppliersCount()"
+    [cols]="buyersCount()"
+    [rowHeaders]="suppliersHeaders()"
+    [colHeaders]="buyersHeaders()"
+    (dataChange)="onCostMatrixChange($event)">
+  </app-table-input>
 
   <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem;">
     <p-select
@@ -28,9 +32,4 @@
 
     <p-button (click)="onSolve()">Решить</p-button>
   </div>
-<app-table-input
-  #tableInput
-  [rows]="suppliersInput.variables() + 1"
-  [cols]="buyersInput.variables() + 1">
-</app-table-input>
 </p-card>
