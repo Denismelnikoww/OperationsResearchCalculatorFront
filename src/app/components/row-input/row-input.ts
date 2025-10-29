@@ -2,7 +2,7 @@
 import { Component, signal, Output, EventEmitter, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { CardModule } from 'primeng/card';
 
 export interface RowInput {
@@ -16,6 +16,7 @@ export interface RowInput {
     InputNumberModule,
     FormsModule,
     NgForOf,
+    NgIf,
     CardModule,
   ],
   templateUrl: './row-input.html',
@@ -23,6 +24,7 @@ export interface RowInput {
 })
 export class LinearRowComponent {
   @Input() label: string = "Количество элементов";
+  @Input() haveLabel: boolean = true;
 
   // Приватный сигнал для внутреннего хранения значения variables
   private _variables = signal<number>(5);
@@ -62,7 +64,7 @@ export class LinearRowComponent {
     } else if (currentRow.length > vars) {
       this.row.set(currentRow.slice(0, vars));
     }
-    this.rowChange.emit(this.row()); // 🔥 Эмитим изменённую строку
+    this.rowChange.emit(this.row());
   }
 
   private createRow(length: number): number[] {

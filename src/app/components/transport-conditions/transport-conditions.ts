@@ -44,8 +44,8 @@ export class TransportConditions {
   @ViewChild('suppliersInput', { static: true }) suppliersInputComponent!: LinearRowComponent;
   @ViewChild('buyersInput', { static: true }) buyersInputComponent!: LinearRowComponent;
 
-  initialSuppliersCount = 5;
-  initialBuyersCount = 5;
+  initialSuppliersCount = 2;
+  initialBuyersCount = 2;
 
   suppliersCount = signal<number>(this.initialSuppliersCount);
   buyersCount = signal<number>(this.initialBuyersCount);
@@ -54,14 +54,12 @@ export class TransportConditions {
   costMatrix = signal<TableData>([]);
 
   constructor() {
-    // Отслеживаем изменения в строке поставщиков
     effect(() => {
       const suppliersRow = this.suppliersInputComponent.row();
       this.suppliersCount.set(suppliersRow.length);
       this.suppliersHeaders.set(suppliersRow.map((_, i) => `Поставщик ${i + 1}`));
     });
 
-    // Отслеживаем изменения в строке покупателей
     effect(() => {
       const buyersRow = this.buyersInputComponent.row();
       this.buyersCount.set(buyersRow.length);

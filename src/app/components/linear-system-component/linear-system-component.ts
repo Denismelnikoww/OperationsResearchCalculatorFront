@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
-import { NgForOf } from '@angular/common';
+import { NgFor, NgForOf } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { Button } from 'primeng/button';
 import { LinearRowComponent } from "../row-input/row-input";
@@ -18,6 +18,7 @@ export interface LinearSystemForm {
   selectedMethod: string;
   max: boolean;
   variables: number[];
+  variableConstraints: string[]; 
 }
 
 @Component({
@@ -42,6 +43,7 @@ export class LinearSystemComponent {
   public coefficients = signal<number[][]>(this.createMatrix(2, 2));
   public constants = signal<number[]>(Array(2).fill(0));
   public constraints = signal<string[]>(Array(2).fill('='));
+  public variableConstraints = signal<string[]>([]);
   public max = "→ max"
   public selectedMethod = "Прямой";
 
@@ -58,6 +60,11 @@ export class LinearSystemComponent {
     { label: '>', value: '>' },
     { label: '<', value: '<' },
     { label: '=', value: '=' }
+  ];
+  variablesConstraintOptions = [
+    { label: '≥ 0', value: '>=' },
+    { label: '≤ 0', value: '<=' },
+    { label: '∀', value: 'any' }
   ];
 
   @ViewChild('input', { static: true }) linearRowComponent!: LinearRowComponent;
@@ -107,7 +114,8 @@ export class LinearSystemComponent {
       constraints: this.constraints(),
       selectedMethod: this.selectedMethod,
       max:  this.max == "max",
-      variables: this.linearRowComponent.row()
+      variables: this.linearRowComponent.row(),
+      variableConstraints: this.variableConstraints()
     };
   }
 

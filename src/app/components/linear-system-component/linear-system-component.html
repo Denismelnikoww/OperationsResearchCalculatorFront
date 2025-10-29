@@ -1,11 +1,12 @@
 <p-card>
   <app-row-input
     #input
+    [haveLabel] = "true"
     [label]="'Функция'"
     [initialVariables]="initialCount">
   </app-row-input>
 
-  <div class="select" style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem">
+  <div class="select" style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;" >
     <p-select
       [(ngModel)]="max"
       [options]="maxOptions"
@@ -60,6 +61,19 @@
     </ng-template>
   </p-table>
 
+  <p></p>
+  <label>Ограничения для переменных</label>
+  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; margin-bottom: 1rem;">
+  <p-select
+    *ngFor="let constraint of linearRowComponent.row(); let i = index;"
+    [(ngModel)]="variableConstraints()[i]"
+    [options]="variablesConstraintOptions"
+    placeholder="x{{i+1}}"
+    appendTo="body">
+  </p-select>
+</div>
+  <p></p>
+  
   <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem;">
     <p-select
       [(ngModel)]="selectedMethod"
