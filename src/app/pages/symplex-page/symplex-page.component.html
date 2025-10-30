@@ -1,11 +1,11 @@
 <app-linear-system (onSubmitForm)="onSubmitForm($event)"></app-linear-system>
 
-@for(table of tables; track table) {
+@for (table of tables; track table) {
   <app-table-component
     [data]="table.table"
-    [columns]="table.columnsNames"
+    [columns]="table.columnNames"
     [rowNames]="table.rowNames"
-    [highlightedRow]="table.pivotRow"
-    [highlightedColumn]="table.pivotColumn">
+    [highlightedRow]="table.pivotRow == -1 ? undefined : table.pivotRow"
+    [highlightedColumn]="table.pivotCol== -1 ? undefined : table.pivotCol">
   </app-table-component>
 }

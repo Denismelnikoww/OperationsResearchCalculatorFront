@@ -24,7 +24,10 @@ export class SymplexPage {
   onSubmitForm(formData: LinearSystemForm) {
     this.httpService.post<LinearSystemForm, TableResponse[]>('/symplex/lineartask', formData).subscribe(
       response => {
-        this.tables = response; // теперь response — массив
+        this.tables = response;
+        this.tables.forEach(table => {
+          console.log(table.columnNames);
+        });
       },
       error => {
         console.error('Ошибка при решении системы:', error);

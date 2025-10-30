@@ -1,7 +1,8 @@
 interface TableResponse {
+  iterationNumber: number;
   table: any[][];
-  columnsNames: string[];
+  columnNames: string[];
   rowNames: string[];
   pivotRow: number;
-  pivotColumn: number;
+  pivotCol: number;
 }
