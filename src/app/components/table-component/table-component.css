@@ -1,11 +1,20 @@
-.highlighted-row {
-  background-color: #262629 !important;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
+
+th, td {
+  padding: 8px;
+  text-align: center; /* Центрируем содержимое */
+  border: 1px solid white; /* Белые границы */
+  color: white; /* Белый текст для контраста */
+}
+
 
 .highlighted-col {
-  background-color: #262629 !important;
+  background-color: #4f4f51 !important;
 }
 
-.highlighted-cell {
-  background-color: #262629 !important;
+.highlighted-row {
+  background-color: #4f4f51 !important;
 }

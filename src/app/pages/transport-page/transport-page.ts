@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {TransportConditions, TransportProblemData} from '../../components/transport-conditions/transport-conditions';
 import {HttpService} from '../../api/http-service';
-import {LinearSystemForm} from '../../components/linear-system-component/linear-system-component';
 
 @Component({
   selector: 'app-transport-page',
   imports: [
     FormsModule,
-    TransportConditions
+    TransportConditions,
   ],
   templateUrl: './transport-page.html',
   styleUrl: './transport-page.css'
