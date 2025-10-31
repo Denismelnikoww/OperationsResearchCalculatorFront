@@ -6,16 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { LinearRowComponent, RowInput } from '../row-input/row-input';
 import { TableInputComponent, TableData } from '../table-input-component/table-input-component';
 
-interface MethodOption {
-  label: string;
-  value: string;
-}
-
 export interface TransportProblemData {
   suppliers: number[];
   buyers: number[];
   costs: number[][];
-  method: string;
+  method: number;
 }
 
 @Component({
@@ -35,10 +30,10 @@ export interface TransportProblemData {
 export class TransportConditions {
   @Output() onSolveForm = new EventEmitter<TransportProblemData>();
 
-  selectedFillMethod: string = "";
-  fillMethodOptions: MethodOption[] = [
-    { label: "Метод северо-западного угла", value: "northwest" },
-    { label: "Метод минимизации", value: "minimization" }
+  selectedFillMethod: number = 0;
+  fillMethodOptions = [
+    { label: "Метод северо-западного угла", value: 2 },
+    { label: "Метод минимизации", value: 1 }
   ];
 
   @ViewChild('suppliersInput', { static: true }) suppliersInputComponent!: LinearRowComponent;
@@ -104,7 +99,7 @@ export class TransportConditions {
       suppliers: suppliersRow,
       buyers: buyersRow,
       costs: currentMatrix,
-      method: this.selectedFillMethod
+      method:  this.selectedFillMethod
     };
 
     this.onSolveForm.emit(formData);

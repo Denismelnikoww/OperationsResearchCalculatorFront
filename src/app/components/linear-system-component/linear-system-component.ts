@@ -15,7 +15,7 @@ export interface LinearSystemForm {
   coefficients: number[][];
   constants: number[];
   constraints: string[];
-  selectedMethod: string;
+  method: number;
   max: boolean;
   variables: number[];
   variableConstraints: string[]; 
@@ -45,16 +45,16 @@ export class LinearSystemComponent {
   public constraints = signal<string[]>(Array(2).fill('='));
   public variableConstraints = signal<string[]>([]);
   public max = "→ max"
-  public selectedMethod = "Прямой";
+  public selectedMethod = 1;
 
   maxOptions = [
     {label: '→ max', value: 'max'},
     {label: '→ min', value: 'min'}
   ]
   methodOptions = [
-    { label: 'Прямой симплекс-метод', value: "Прямой" },
-    { label: 'Одновременное решение прямой и двойственной задачи', value: "Одновременное" },
-    { label: 'Двойственный симплекс', value: 'Двойственный' }
+    { label: 'Прямой симплекс-метод', value: 1 },
+    { label: 'Одновременное решение прямой и двойственной задачи', value: 2 },
+    { label: 'Двойственный симплекс', value: 3 }
   ];
   constraintOptions = [
     { label: '>', value: '>' },
@@ -112,7 +112,7 @@ export class LinearSystemComponent {
       coefficients: this.coefficients(),
       constants: this.constants(),
       constraints: this.constraints(),
-      selectedMethod: this.selectedMethod,
+      method: this.selectedMethod,
       max:  this.max == "max",
       variables: this.linearRowComponent.row(),
       variableConstraints: this.variableConstraints()
