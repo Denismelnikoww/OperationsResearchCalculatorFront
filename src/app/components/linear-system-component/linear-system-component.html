@@ -1,12 +1,16 @@
+<!-- linear-system-component.html -->
 <p-card>
   <app-row-input
     #input
-    [haveLabel] = "true"
-    [label]="'Функция'"
-    [initialVariables]="initialCount">
+    [haveLabel]="true"
+    [label]="'Количество переменных в функции'"
+    [text]="'Введите функцию'"
+    [haveText] = "true"
+    [initialVariables]="initialCount"
+    (rowChange)="updateSystemDisplay()"> <!-- Добавляем Output для отслеживания изменений в rowInput -->
   </app-row-input>
 
-  <div class="select" style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;" >
+  <div class="select" style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;">
     <p-select
       [(ngModel)]="max"
       [options]="maxOptions"
@@ -18,62 +22,74 @@
 
   <div class="input-group">
     <label>Количество уравнений: </label>
-    <p-inputNumber [(ngModel)]="equations" [min]="1" [max]="10" (onInput)="updateSystemAsync()"></p-inputNumber>
-    <label>Количество переменных: </label>
-    <p-inputNumber [(ngModel)]="variables" [min]="1" [max]="10" (onInput)="updateSystemAsync()"></p-inputNumber>
+    <p-inputNumber [(ngModel)]="equations" [min]="1" [max]="10" (onInput)="onEquationsChange()"></p-inputNumber>
+    <!-- Убираем поле "Количество переменных" -->
   </div>
-  <p-table [value]="coefficients()" [tableStyle]="{ 'width': '100%', 'table-layout': 'fixed' }">
-    <ng-template pTemplate="header">
-      <tr>
-        <th *ngFor="let varLabel of getVariableLabels()">{{ varLabel }}</th>
-        <th>Ограничение</th>
-        <th>b</th>
-      </tr>
-    </ng-template>
 
-    <ng-template pTemplate="body" let-i="rowIndex">
+  <!-- Таблица с width: 100%, table-layout: fixed, без скролла -->
+  <div style="width: 100%; overflow: hidden;"> <!-- Это важно! -->
+    <table style="width: 100%; table-layout: fixed; border-collapse: collapse; background: transparent;">
+      <thead>
       <tr>
-        <td *ngFor="let _ of getVariableLabels(); let j = index">
+        <!-- Заголовки — одинаковая ширина -->
+        <th *ngFor="let varLabel of getVariableLabels()" style="padding: 4px; text-align: center;">
+          {{ varLabel }}
+        </th>
+        <th style="padding: 4px; text-align: center;">
+          Ограничение
+        </th>
+        <th style="padding: 4px; text-align: center;">
+          b
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let rowData of systemRows(); trackBy: trackByRow; let i = index">
+        <td *ngFor="let _ of getVariableLabels(); let j = index" style="padding: 0; ">
           <p-inputNumber
-            [(ngModel)]="coefficients()[i][j]"
+            [(ngModel)]="rowData.coefficients[j]"
+            (ngModelChange)="onCoefficientChange(i, j, $event)"
             [minFractionDigits]="0"
             [maxFractionDigits]="3"
             style="width: 100%; box-sizing: border-box;">
           </p-inputNumber>
         </td>
-        <td>
+        <td style="padding: 0; ">
           <p-select
-            [(ngModel)]="constraints()[i]"
+            [(ngModel)]="rowData.constraint"
+            (ngModelChange)="onConstraintChange(i, $event)"
             [options]="constraintOptions"
             appendTo="body"
             style="width: 100%; box-sizing: border-box;">
           </p-select>
         </td>
-        <td>
+        <td style="padding: 0; ">
           <p-inputNumber
-            [(ngModel)]="constants()[i]"
+            [(ngModel)]="rowData.constant"
+            (ngModelChange)="onConstantChange(i, $event)"
             [minFractionDigits]="0"
             [maxFractionDigits]="3"
             style="width: 100%; box-sizing: border-box;">
           </p-inputNumber>
         </td>
       </tr>
-    </ng-template>
-  </p-table>
+      </tbody>
+    </table>
+  </div>
 
   <p></p>
   <label>Ограничения для переменных</label>
   <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; margin-bottom: 1rem;">
-  <p-select
-    *ngFor="let constraint of linearRowComponent.row(); let i = index;"
-    [(ngModel)]="variableConstraints()[i]"
-    [options]="variablesConstraintOptions"
-    placeholder="x{{i+1}}"
-    appendTo="body">
-  </p-select>
-</div>
+    <p-select
+      *ngFor="let constraint of linearRowComponent.row(); let i = index;"
+      [(ngModel)]="variableConstraints()[i]"
+      [options]="variablesConstraintOptions"
+      placeholder="x{{i+1}}"
+      appendTo="body">
+    </p-select>
+  </div>
   <p></p>
-  
+
   <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem;">
     <p-select
       [(ngModel)]="selectedMethod"

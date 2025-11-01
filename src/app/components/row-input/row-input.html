@@ -1,19 +1,26 @@
+<!-- row-input.html -->
 <div *ngIf="haveLabel" class="input-group">
   <label>{{ label }}: </label>
   <p-inputNumber
     [(ngModel)]="variables"
     [min]="1"
     [max]="10"
-    (onInput)="updateRowAsync()">
+    (onInput)="onVariablesChange()"
+    inputId="variable-count">
   </p-inputNumber>
+</div>
+
+<div *ngIf="haveText" class="input-group">
+  <label>{{ text }}: </label>
 </div>
 
 <div class="row-input-container">
   <p-inputNumber
-    *ngFor="let _ of getVariableLabels(); let i = index"
-    [(ngModel)]="row()[i]"
+    *ngFor="let label of getVariableLabels(); let i = index"
+    [ngModel]="row()[i]"
+    (ngModelChange)="onValueChange(i, $event)"
     [minFractionDigits]="0"
     [maxFractionDigits]="3"
-    inputId="row-element-{{i}}"
-  ></p-inputNumber>
+    [inputId]="'row-element-' + i">
+  </p-inputNumber>
 </div>
