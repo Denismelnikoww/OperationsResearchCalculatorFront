@@ -5,29 +5,33 @@ import {
   LinearSystemForm
 } from '../../components/linear-system-component/linear-system-component';
 import {TableComponent} from '../../components/table-component/table-component';
+import {Card} from 'primeng/card';
 
 @Component({
   selector: 'app-symplex',
   templateUrl: './symplex-page.component.html',
   imports: [
     LinearSystemComponent,
-    TableComponent
+    TableComponent,
+    Card
   ],
   styleUrls: ['./symplex-page.component.css']
 })
 export class SymplexPage {
-  public tables: TableResponse[] = [];
+  public iterations: IterationSnapshot[] | undefined = undefined;
+  public canonForm: string[] | undefined = undefined;
+  public optimum: string[] | undefined = undefined;
 
   constructor(private httpService: HttpService) {
   }
 
   onSubmitForm(formData: LinearSystemForm) {
-    this.httpService.post<LinearSystemForm, TableResponse[]>('/symplex/lineartask', formData).subscribe(
+    this.httpService.post<LinearSystemForm, SymplexResponse>('/symplex/lineartask', formData).subscribe(
       response => {
-        this.tables = response;
-        this.tables.forEach(table => {
-          console.log(table.columnNames);
-        });
+        this.iterations = response.iterations;
+        this.canonForm = response.canonForm;
+        this.optimum = response.optimum;
+        console.log(response);
       },
       error => {
         console.error('Ошибка при решении системы:', error);

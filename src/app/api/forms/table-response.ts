@@ -1,8 +1,14 @@
-interface TableResponse {
+interface SymplexResponse {
+  canonForm: string[];
+  iterations: IterationSnapshot[];
+  optimum: string[];
+}
+
+interface IterationSnapshot {
   iterationNumber: number;
-  table: any[][];
-  columnNames: string[];
+  table: number[][];
   rowNames: string[];
+  columnNames: string[];
   pivotRow: number;
   pivotCol: number;
 }

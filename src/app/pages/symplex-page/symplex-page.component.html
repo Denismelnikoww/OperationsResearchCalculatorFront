@@ -1,11 +1,23 @@
 <app-linear-system (onSubmitForm)="onSubmitForm($event)"></app-linear-system>
 
-@for (table of tables; track table) {
-  <app-table-component
-    [data]="table.table"
-    [columns]="table.columnNames"
-    [rowNames]="table.rowNames"
-    [highlightedRow]="table.pivotRow == -1 ? undefined : table.pivotRow"
-    [highlightedColumn]="table.pivotCol== -1 ? undefined : table.pivotCol">
-  </app-table-component>
+@if (!!canonForm?.length) {
+  <p-card>
+    <label>Каноническая форма<br></label>
+  @for (stroke of canonForm; track stroke) {
+    <label>{{ stroke }}<br></label>
+  }
+  </p-card>
 }
+
+@if (!!iterations?.length) {
+  @for (table of iterations; track table) {
+    <app-table-component
+      [data]="table.table"
+      [columns]="table.columnNames"
+      [rowNames]="table.rowNames"
+      [highlightedRow]="table.pivotRow == -1 ? undefined : table.pivotRow"
+      [highlightedColumn]="table.pivotCol == -1 ? undefined : table.pivotCol">
+    </app-table-component>
+  }
+}
+
