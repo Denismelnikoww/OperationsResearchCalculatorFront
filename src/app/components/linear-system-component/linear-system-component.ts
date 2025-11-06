@@ -1,12 +1,12 @@
 // linear-system-component.ts
-import { Component, signal, Output, EventEmitter, ViewChild, TrackByFunction } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { SelectModule } from 'primeng/select';
-import { NgFor, NgForOf } from '@angular/common';
-import { CardModule } from 'primeng/card';
-import { Button } from 'primeng/button';
-import { LinearRowComponent } from "../row-input/row-input";
+import {Component, signal, Output, EventEmitter, ViewChild, TrackByFunction} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {SelectModule} from 'primeng/select';
+import {NgFor, NgForOf, NgIf} from '@angular/common';
+import {CardModule} from 'primeng/card';
+import {Button} from 'primeng/button';
+import {LinearRowComponent} from "../row-input/row-input";
 
 export interface LinearSystemForm {
   coefficients: number[][];
@@ -16,6 +16,7 @@ export interface LinearSystemForm {
   max: boolean;
   variables: number[];
   variableConstraints: string[];
+  dot?: number[];
 }
 
 // Интерфейс для строки данных
@@ -35,22 +36,20 @@ interface SystemRow {
     NgForOf,
     CardModule,
     Button,
-    LinearRowComponent
+    LinearRowComponent,
+    NgIf
   ],
   templateUrl: './linear-system-component.html',
   styleUrls: ['./linear-system-component.css']
 })
 export class LinearSystemComponent {
   private _equations = signal<number>(2);
-  // private _variables больше не нужно, используем длину из linearRowComponent
 
   public equations = signal<number>(this._equations());
 
   private readonly MAX_EQUATIONS = 10;
-  // MAX_VARIABLES теперь зависит от linearRowComponent.row().length
+  private readonly MAX_VARIABLES = 10
 
-  // Приватное хранилище строк
-  // Инициализируем с количеством столбцов, равным initialCount
   private _allSystemRows = signal<SystemRow[]>(
     Array(this.MAX_EQUATIONS).fill(null).map(() => ({
       coefficients: Array(10).fill(0), // Максимум 10, как и было
@@ -58,6 +57,9 @@ export class LinearSystemComponent {
       constraint: '='
     }))
   );
+
+  private _allDotData = signal<number[]>(Array(this.MAX_VARIABLES).fill(0)); // <-- Добавили
+  public dot = signal<number[]>(this._allDotData().slice(0, 2));
 
   // Публичный сигнал для отображаемых строк (срез)
   // Инициализируем с нужным количеством
@@ -71,26 +73,27 @@ export class LinearSystemComponent {
   public selectedMethod = 1;
 
   maxOptions = [
-    { label: '→ max', value: 'max' },
-    { label: '→ min', value: 'min' }
+    {label: '→ max', value: 'max'},
+    {label: '→ min', value: 'min'}
   ]
   methodOptions = [
-    { label: 'Прямой симплекс-метод', value: 1 },
-    { label: 'Одновременное решение прямой и двойственной задачи', value: 2 },
-    { label: 'Двойственный симплекс', value: 3 }
+    {label: 'Прямой симплекс-метод', value: 1},
+    {label: 'Одновременное решение прямой и двойственной задачи', value: 2},
+    {label: 'Двойственный симплекс', value: 3},
+    {label: 'Проверка оптимальности плана', value: 4}
   ];
   constraintOptions = [
-    { label: '≥', value: '>=' },
-    { label: '≤', value: '<=' },
-    { label: '=', value: '=' }
+    {label: '≥', value: '>='},
+    {label: '≤', value: '<='},
+    {label: '=', value: '='}
   ];
   variablesConstraintOptions = [
-    { label: '≥ 0', value: '>=' },
-    { label: '≤ 0', value: '<=' },
-    { label: '∀', value: 'any' }
+    {label: '≥ 0', value: '>='},
+    {label: '≤ 0', value: '<='},
+    {label: '∀', value: 'any'}
   ];
 
-  @ViewChild('input', { static: true }) linearRowComponent!: LinearRowComponent;
+  @ViewChild('input', {static: true}) linearRowComponent!: LinearRowComponent;
   initialCount = 2;
 
   @Output() onSubmitForm = new EventEmitter<LinearSystemForm>();
@@ -118,6 +121,9 @@ export class LinearSystemComponent {
     const eq = this._equations();
     // Получаем текущее количество переменных из linearRowComponent
     const vars = this.linearRowComponent.row().length;
+    const clampedVars = Math.max(1, Math.min(this.MAX_VARIABLES, vars));
+    const newDotSlice = this._allDotData().slice(0, clampedVars); // <-- Берем срез из _allDotData
+    this.dot.set(newDotSlice); // <-- Устанавливаем публичный сигнал dot
     const newRows = this._allSystemRows().slice(0, eq).map(row => ({
       ...row,
       coefficients: row.coefficients.slice(0, vars) // Обновляем коэффициенты
@@ -125,7 +131,24 @@ export class LinearSystemComponent {
     this.systemRows.set(newRows);
   }
 
-  // Обработчики изменений в строке
+  onDotChange(index: number, value: number | null | undefined): void {
+    const vars = this.linearRowComponent.row().length;
+    const clampedIndex = Math.max(0, Math.min(this.MAX_VARIABLES - 1, index));
+
+    if (index >= 0 && index < vars) {
+      const valueToSet = value ?? 0;
+      const currentAllDot = this._allDotData();
+      const newAllDot = [...currentAllDot];
+      newAllDot[clampedIndex] = valueToSet;
+      this._allDotData.set(newAllDot);
+
+      const currentVarsLength = this.linearRowComponent.row().length;
+      const updatedDotSlice = this._allDotData().slice(0, currentVarsLength);
+      this.dot.set(updatedDotSlice);
+    }
+  }
+
+
   onCoefficientChange(rowIndex: number, colIndex: number, value: number | null | undefined): void {
     const valueToSet = value ?? 0;
     // Используем длину linearRowComponent.row() для ограничения
@@ -136,7 +159,7 @@ export class LinearSystemComponent {
       const rowToModify = currentAllRows[rowIndex];
       const newCoefficients = [...rowToModify.coefficients];
       newCoefficients[colIndex] = valueToSet;
-      const newRowData = { ...rowToModify, coefficients: newCoefficients };
+      const newRowData = {...rowToModify, coefficients: newCoefficients};
       const newAllRows = [...currentAllRows];
       newAllRows[rowIndex] = newRowData;
       this._allSystemRows.set(newAllRows);
@@ -162,7 +185,7 @@ export class LinearSystemComponent {
       // Обновляем приватное хранилище
       const currentAllRows = this._allSystemRows();
       const rowToModify = currentAllRows[rowIndex];
-      const newRowData = { ...rowToModify, constant: valueToSet };
+      const newRowData = {...rowToModify, constant: valueToSet};
       const newAllRows = [...currentAllRows];
       newAllRows[rowIndex] = newRowData;
       this._allSystemRows.set(newAllRows);
@@ -170,7 +193,7 @@ export class LinearSystemComponent {
       // Обновляем ПУБЛИЧНЫЙ сигнал systemRows
       if (rowIndex < this._equations()) {
         const currentDisplayRows = this.systemRows();
-        const newDisplayRow = { ...currentDisplayRows[rowIndex], constant: valueToSet };
+        const newDisplayRow = {...currentDisplayRows[rowIndex], constant: valueToSet};
         const newDisplayRows = [...currentDisplayRows];
         newDisplayRows[rowIndex] = newDisplayRow; // ЗАМЕНЯЕМ ссылку на строку
         this.systemRows.set(newDisplayRows);
@@ -183,7 +206,7 @@ export class LinearSystemComponent {
       // Обновляем приватное хранилище
       const currentAllRows = this._allSystemRows();
       const rowToModify = currentAllRows[rowIndex];
-      const newRowData = { ...rowToModify, constraint: value };
+      const newRowData = {...rowToModify, constraint: value};
       const newAllRows = [...currentAllRows];
       newAllRows[rowIndex] = newRowData;
       this._allSystemRows.set(newAllRows);
@@ -191,7 +214,7 @@ export class LinearSystemComponent {
       // Обновляем ПУБЛИЧНЫЙ сигнал systemRows
       if (rowIndex < this._equations()) {
         const currentDisplayRows = this.systemRows();
-        const newDisplayRow = { ...currentDisplayRows[rowIndex], constraint: value };
+        const newDisplayRow = {...currentDisplayRows[rowIndex], constraint: value};
         const newDisplayRows = [...currentDisplayRows];
         newDisplayRows[rowIndex] = newDisplayRow; // ЗАМЕНЯЕМ ссылку на строку
         this.systemRows.set(newDisplayRows);
@@ -211,6 +234,8 @@ export class LinearSystemComponent {
     const constants = rows.map(row => row.constant);
     const constraints = rows.map(row => row.constraint);
 
+    const currentDot = this.selectedMethod === 4 ? this.dot() : undefined;
+
     return {
       coefficients,
       constants,
@@ -218,7 +243,8 @@ export class LinearSystemComponent {
       method: this.selectedMethod,
       max: this.max == "max",
       variables: this.linearRowComponent.row(), // Передаём массив переменных функции
-      variableConstraints: this.variableConstraints()
+      variableConstraints: this.variableConstraints(),
+      dot: currentDot
     };
   }
 

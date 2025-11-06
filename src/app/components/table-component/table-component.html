@@ -1,4 +1,5 @@
 <p-card>
+  <label *ngIf="haveStroke" style="white-space: pre;">{{stroke}}</label>
   <table style="width: 100%; border-collapse: collapse;">
     <thead>
     <tr>
@@ -17,9 +18,11 @@
       <td>{{ rowNames[rowIndex] || rowIndex + 1 }}</td>
       <td *ngFor="let cell of rowData; let colIndex = index"
           [ngClass]="{
-              'highlighted-col': highlightedColumn != null && +highlightedColumn === colIndex
+              'highlighted-col': highlightedColumn != null && +highlightedColumn === colIndex,
+              'selected-cell': isSelected(rowIndex, colIndex)
             }">
         {{ cell }}
+
       </td>
     </tr>
     </tbody>

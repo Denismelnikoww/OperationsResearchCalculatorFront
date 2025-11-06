@@ -5,7 +5,7 @@
     [haveLabel]="true"
     [label]="'Количество переменных в функции'"
     [text]="'Введите функцию'"
-    [haveText] = "true"
+    [haveText]="true"
     [initialVariables]="initialCount"
     (rowChange)="updateSystemDisplay()"> <!-- Добавляем Output для отслеживания изменений в rowInput -->
   </app-row-input>
@@ -23,10 +23,8 @@
   <div class="input-group">
     <label>Количество уравнений: </label>
     <p-inputNumber [(ngModel)]="equations" [min]="1" [max]="10" (onInput)="onEquationsChange()"></p-inputNumber>
-    <!-- Убираем поле "Количество переменных" -->
   </div>
 
-  <!-- Таблица с width: 100%, table-layout: fixed, без скролла -->
   <div style="width: 100%; overflow: hidden;"> <!-- Это важно! -->
     <table style="width: 100%; table-layout: fixed; border-collapse: collapse; background: transparent;">
       <thead>
@@ -89,6 +87,20 @@
     </p-select>
   </div>
   <p></p>
+
+  <div *ngIf="selectedMethod == 4"> <!-- Обновили условие -->
+    <p></p>
+    <label>Точка</label>
+    <div
+      style="display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; margin-bottom: 1rem;">
+      <p-input-number
+        *ngFor="let var of linearRowComponent.row(); let i = index;"
+      placeholder="x{{ i + 1 }}"
+      [(ngModel)]="dot()[i]"
+      (ngModelChange)="onDotChange(i, $event)">
+      </p-input-number>
+    </div>
+  </div>
 
   <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem;">
     <p-select

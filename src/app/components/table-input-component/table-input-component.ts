@@ -1,18 +1,19 @@
 import { NgClass, NgForOf, NgIf } from '@angular/common';
-import { Component, Input, Output, EventEmitter, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 
 export type TableData = number[][];
+
+// Максимальный размер таблицы
+const MAX_SIZE = 10;
 
 @Component({
   selector: 'app-table-input',
   standalone: true,
   imports: [
     FormsModule,
-    TableModule,
     InputNumberModule,
     CardModule,
     NgForOf,
@@ -30,15 +31,18 @@ export class TableInputComponent implements OnChanges {
 
   @Output() dataChange = new EventEmitter<TableData>();
 
-  tableData: TableData = [];
-  // Массивы для заголовков по умолчанию, если не переданы
+  // Храним все возможные данные в таблице 10x10
+  private fullTableData: TableData = Array(MAX_SIZE).fill(0).map(() => Array(MAX_SIZE).fill(0));
   displayedRowHeaders: string[] = [];
   displayedColHeaders: string[] = [];
+
+  // Данные, отображаемые в текущем представлении
+  currentViewData: TableData = [];
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['rows'] || changes['cols'] || changes['rowHeaders'] || changes['colHeaders']) {
       this.updateHeaders();
-      this.initializeTable();
+      this.updateViewData();
     }
   }
 
@@ -52,20 +56,53 @@ export class TableInputComponent implements OnChanges {
       : Array.from({ length: this.cols }, (_, j) => `Col ${j + 1}`);
   }
 
-  initializeTable() {
-    this.tableData = Array(this.rows)
-      .fill(0)
-      .map(() => Array(this.cols).fill(0));
-    this.dataChange.emit(this.tableData);
+  updateViewData() {
+    this.currentViewData = [];
+    for (let i = 0; i < this.rows; i++) {
+      const row: number[] = [];
+      for (let j = 0; j < this.cols; j++) {
+        // Используем данные из fullTableData, даже если они были до изменения размеров
+        row.push(this.fullTableData[i][j]);
+      }
+      this.currentViewData.push(row);
+    }
+    // Не эмитим здесь, т.к. данные могут не измениться, а только отображение
+    // Эмит будет при изменении значения в ячейке
+  }
+
+  trackByIndex(index: number, item: any): number {
+    return index;
   }
 
   onCellValueChange(row: number, col: number, value: number | null) {
     if (value === null || value === undefined) value = 0;
-    this.tableData[row][col] = value;
-    this.dataChange.emit(this.tableData); // Emit updated data
+    // Обновляем значение в хранилище
+    this.fullTableData[row][col] = value;
+
+    const newRow = [...this.currentViewData[row]];
+    newRow[col] = value;
+    const newViewData = [...this.currentViewData];
+    newViewData[row] = newRow;
+
+    // Присваиваем новую ссылку на массив
+    this.currentViewData = newViewData;
+
+    this.dataChange.emit(this.getCurrentTableData());
+  }
+
+  getCurrentTableData(): TableData {
+    const data: TableData = [];
+    for (let i = 0; i < this.rows; i++) {
+      const row: number[] = [];
+      for (let j = 0; j < this.cols; j++) {
+        row.push(this.fullTableData[i][j]);
+      }
+      data.push(row);
+    }
+    return data;
   }
 
   getData(): TableData {
-    return this.tableData;
+    return this.getCurrentTableData();
   }
 }

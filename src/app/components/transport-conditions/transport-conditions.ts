@@ -90,11 +90,6 @@ export class TransportConditions {
 
     const currentMatrix = this.costMatrix();
 
-    if (currentMatrix.length !== suppliersRow.length || currentMatrix.some(row => row.length !== buyersRow.length)) {
-      console.warn('Матрица стоимостей не соответствует размерам поставщиков и покупателей');
-      return;
-    }
-
     const formData: TransportProblemData = {
       suppliers: suppliersRow,
       buyers: buyersRow,

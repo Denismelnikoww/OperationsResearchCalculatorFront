@@ -10,11 +10,14 @@ th, td {
   color: white; /* Белый текст для контраста */
 }
 
-
 .highlighted-col {
   background-color: #4f4f51 !important;
 }
 
 .highlighted-row {
   background-color: #4f4f51 !important;
+}
+
+.selected-cell {
+  background-color: #1d5e98 !important;
 }

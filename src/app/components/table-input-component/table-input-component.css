@@ -1,37 +1,40 @@
-.table-wrapper {
+.table-input-table {
   width: 100%;
-  overflow-x: hidden; /* ГАРАНТИРУЕТ отсутствие скролла */
-  box-sizing: border-box;
+  border-collapse: collapse;
+  table-layout: fixed; /* Ключевое изменение! */
+  overflow-x: hidden; /* Убедимся, что скролла нет */
 }
 
-.p-inputnumber {
-  width: 7rem; /* Уменьшено с 8rem до 7rem */
-  margin: 0.25rem;
-  min-width: 0; /* Позволяет элементу сжиматься */
-}
-
-.p-card {
-  padding: 1rem;
-  overflow-x: hidden; /* Скрывает горизонтальный скролл на уровне карточки */
-}
-
-th, td {
+.header-cell {
+  padding: 8px;
   text-align: center;
   vertical-align: middle;
-  padding: 0.5rem; /* Уменьшено внутреннее пространство */
-  white-space: nowrap; /* Предотвращает перенос текста */
-}
-
-th {
-  background-color: #f8f9fa;
   font-weight: bold;
-  min-width: 7rem; /* Устанавливает минимальную ширину для заголовков */
+  word-break: break-all; /* Переносим текст, если он слишком длинный */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* Разрешаем перенос строк */
 }
 
-/* Обертка для таблицы */
-.table-container {
-  overflow-x: auto; /* Если все же нужен скролл, пусть будет только у таблицы */
+.data-cell {
+  padding: 2px;
+  text-align: center;
+  vertical-align: middle;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+/* Стили для inputNumber — делаем их гибкими */
+.data-cell .p-inputnumber {
   width: 100%;
-  max-width: 100vw; /* Ограничивает ширину контейнера */
-  box-sizing: border-box;
+  max-width: 100%; /* Не ограничиваем по ширине */
+  min-width: 0;     /* Позволяет сжиматься */
+}
+
+/* Опционально: если нужно, чтобы заголовки были меньше */
+.header-cell {
+  font-size: 0.9rem;
+  line-height: 1.2;
 }

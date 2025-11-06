@@ -1,1 +1,13 @@
 <app-transport-conditions (onSolveForm)="handleSolve($event)"></app-transport-conditions>
+
+<div *ngIf="tables != undefined">
+  <app-table-component
+    *ngFor="let table of tables; let i = index"
+    [data]="table.table"
+    [columns]="table.buyers"
+    [rowNames]="table.sellers"
+    [haveStroke]=" true"
+    [selectedCells]="table.selectedCells"
+    [stroke]="table.stroke"
+  ></app-table-component>
+</div>
