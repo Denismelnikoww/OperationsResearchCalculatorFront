@@ -9,6 +9,15 @@
   </p-card>
 }
 
+@if (!!optimum?.length) {
+  <p-card>
+    <label>Проверка оптимальности плана<br></label>
+  @for (stroke of optimum; track stroke) {
+    <label>{{ stroke }}<br></label>
+  }
+  </p-card>
+}
+
 @if (!!iterations?.length) {
   @for (table of iterations; track table) {
     <app-table-component
