@@ -2,19 +2,10 @@
 
 @if (!!canonForm?.length) {
   <p-card>
-    <label>Каноническая форма<br></label>
-  @for (stroke of canonForm; track stroke) {
-    <label>{{ stroke }}<br></label>
-  }
-  </p-card>
-}
-
-@if (!!optimum?.length) {
-  <p-card>
-    <label>Проверка оптимальности плана<br></label>
-  @for (stroke of optimum; track stroke) {
-    <label>{{ stroke }}<br></label>
-  }
+    <label *ngIf="method!=5">Каноническая форма<br></label>
+    @for (stroke of canonForm; track stroke) {
+      <label>{{ stroke }}<br></label>
+    }
   </p-card>
 }
 
@@ -28,5 +19,14 @@
       [highlightedColumn]="table.pivotCol == -1 ? undefined : table.pivotCol">
     </app-table-component>
   }
+}
+
+@if (!!optimum?.length) {
+  <p-card>
+    <label *ngIf="method!=2">Проверка оптимальности плана<br></label>
+    @for (stroke of optimum; track stroke) {
+      <label>{{ stroke }}<br></label>
+    }
+  </p-card>
 }
 

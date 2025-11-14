@@ -78,9 +78,10 @@ export class LinearSystemComponent {
   ]
   methodOptions = [
     {label: 'Прямой симплекс-метод', value: 1},
-    // {label: 'Одновременное решение прямой и двойственной задачи', value: 2},
+    {label: 'Одновременное решение прямой и двойственной задачи', value: 2},
     {label: 'Двойственный симплекс', value: 3},
-    {label: 'Проверка оптимальности плана', value: 4}
+    {label: 'Проверка оптимальности плана', value: 4},
+    {label: 'Построение двойственной задачи', value: 5}
   ];
   constraintOptions = [
     {label: '≥', value: '>='},

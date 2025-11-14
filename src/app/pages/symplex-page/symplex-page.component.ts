@@ -6,6 +6,7 @@ import {
 } from '../../components/linear-system-component/linear-system-component';
 import {TableComponent} from '../../components/table-component/table-component';
 import {Card} from 'primeng/card';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-symplex',
@@ -13,7 +14,8 @@ import {Card} from 'primeng/card';
   imports: [
     LinearSystemComponent,
     TableComponent,
-    Card
+    Card,
+    NgIf
   ],
   styleUrls: ['./symplex-page.component.css']
 })
@@ -21,6 +23,7 @@ export class SymplexPage {
   public iterations: IterationSnapshot[] | undefined = undefined;
   public canonForm: string[] | undefined = undefined;
   public optimum: string[] | undefined = undefined;
+  public  method:number = 1 ;
 
   constructor(private httpService: HttpService) {
   }
@@ -31,6 +34,7 @@ export class SymplexPage {
         this.iterations = response.iterations;
         this.canonForm = response.canonForm;
         this.optimum = response.optimum;
+        this.method = formData.method;
         console.log(response);
       },
       error => {
