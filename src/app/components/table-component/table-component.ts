@@ -19,7 +19,13 @@ export class TableComponent {
   @Input() rowNames: string[] = [];
   @Input() highlightedRow?: number;
   @Input() highlightedColumn?: number;
-  @Input() selectedCells: Cell[] = [];
+   @Input() set selectedCells(cells: Cell[] | null) {
+    this._selectedCells = cells || [];
+  }
+  get selectedCells(): Cell[] {
+    return this._selectedCells;
+  }
+  private _selectedCells: Cell[] = [];
 
   isSelected(rowIndex: number, colIndex: number): boolean {
     return this.selectedCells.some(cell => cell.row === rowIndex && cell.column === colIndex);
