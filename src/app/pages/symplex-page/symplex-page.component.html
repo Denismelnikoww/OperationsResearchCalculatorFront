@@ -30,3 +30,12 @@
   </p-card>
 }
 
+@if (!!result?.length) {
+  <p-card>
+    @for (stroke of result; track stroke) {
+      <label>{{ stroke }}<br></label>
+    }
+  </p-card>
+}
+
+

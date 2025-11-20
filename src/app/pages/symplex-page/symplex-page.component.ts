@@ -23,6 +23,7 @@ export class SymplexPage {
   public iterations: IterationSnapshot[] | undefined = undefined;
   public canonForm: string[] | undefined = undefined;
   public optimum: string[] | undefined = undefined;
+  public result: string[] | undefined = undefined;
   public  method:number = 1 ;
 
   constructor(private httpService: HttpService) {
@@ -34,8 +35,10 @@ export class SymplexPage {
         this.iterations = response.iterations;
         this.canonForm = response.canonForm;
         this.optimum = response.optimum;
+        this.result = response.result;
         this.method = formData.method;
         console.log(response);
+        console.log(this);
       },
       error => {
         console.error('Ошибка при решении системы:', error);

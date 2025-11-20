@@ -2,6 +2,7 @@ interface SymplexResponse {
   canonForm: string[];
   iterations: IterationSnapshot[];
   optimum: string[];
+  result: string[];
 }
 
 interface IterationSnapshot {
